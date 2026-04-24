@@ -1,13 +1,40 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar" dir="rtl" class="dark">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/crescent.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>نور الإسلام | Islamic App</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=Cairo:wght@300;400;500;600;700;900&family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet" />
+
+    <!-- ✅ Anti-FOUC: apply saved theme BEFORE first paint -->
+    <script>
+      (function () {
+        try {
+          // Check Zustand persisted store first
+          var zustandRaw = localStorage.getItem('islamic-app-storage');
+          var zustandDark = zustandRaw ? JSON.parse(zustandRaw).state.darkMode : undefined;
+          // Fall back to standalone theme key
+          var saved = localStorage.getItem('theme');
+          var isDark = saved
+            ? saved === 'dark'
+            : zustandDark !== undefined
+              ? zustandDark
+              : true;
+          var root = document.documentElement;
+          if (isDark) {
+            root.classList.add('dark');
+            root.classList.remove('light');
+          } else {
+            root.classList.remove('dark');
+            root.classList.add('light');
+          }
+        } catch (e) {
+          document.documentElement.classList.add('dark');
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

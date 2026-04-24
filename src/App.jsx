@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
 import { AnimatePresence } from 'framer-motion'
-import { useAppStore } from './store/appStore'
+import { useTheme } from './hooks/useTheme.js'
 import { Navbar } from './components/layout/Navbar.jsx'
 import HomePage from './pages/HomePage.jsx'
 import QuranPage from './pages/QuranPage.jsx'
@@ -15,26 +15,23 @@ function AnimatedRoutes() {
   return (
     <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/quran" element={<QuranPage />} />
-        <Route path="/quran/:id" element={<SurahPage />} />
-        <Route path="/hadith" element={<HadithPage />} />
-        <Route path="/azkar" element={<AzkarPage />} />
-        <Route path="/favorites" element={<FavoritesPage />} />
+        <Route path="/"           element={<HomePage />} />
+        <Route path="/quran"      element={<QuranPage />} />
+        <Route path="/quran/:id"  element={<SurahPage />} />
+        <Route path="/hadith"     element={<HadithPage />} />
+        <Route path="/azkar"      element={<AzkarPage />} />
+        <Route path="/favorites"  element={<FavoritesPage />} />
       </Routes>
     </AnimatePresence>
   )
 }
 
 function AppContent() {
-  const darkMode = useAppStore((s) => s.darkMode)
-
-  useEffect(() => {
-    document.documentElement.classList.toggle('dark', darkMode)
-  }, [darkMode])
+  // useTheme syncs darkMode → html.classList on every change
+  useTheme()
 
   return (
-    <div className="min-h-screen" style={{ background: '#060e1a' }}>
+    <div className="min-h-screen" style={{ background: 'var(--bg-base)' }}>
       <Navbar />
       <main>
         <AnimatedRoutes />

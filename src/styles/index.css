@@ -2,137 +2,218 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ============================================================
+   THEME VARIABLES - html.dark / html (light)
+   ============================================================ */
 @layer base {
+  html.dark {
+    --bg-base:          #060e1a;
+    --bg-surface:       #0f2035;
+    --bg-card:          #132840;
+    --bg-card-hover:    #1a3350;
+    --bg-nav:           rgba(6,14,26,0.97);
+    --border:           #1e3a5a;
+    --border-gold:      rgba(212,175,55,0.22);
+    --text-primary:     #f0e6c8;
+    --text-secondary:   #9ca3af;
+    --text-muted:       #4b6280;
+    --text-ayah:        #e8d5a3;
+    --scrollbar-bg:     #060e1a;
+    --skeleton-from:    rgba(30,58,90,0.5);
+    --hero-glow:        rgba(26,71,49,0.25);
+    --card-gradient:    linear-gradient(135deg,rgba(19,40,64,0.92) 0%,rgba(15,32,53,0.92) 100%);
+  }
+
+  html:not(.dark) {
+    --bg-base:          #f7f2e8;
+    --bg-surface:       #fffdf5;
+    --bg-card:          #ffffff;
+    --bg-card-hover:    #fdf8ee;
+    --bg-nav:           rgba(247,242,232,0.97);
+    --border:           #ddd0a8;
+    --border-gold:      rgba(180,130,20,0.28);
+    --text-primary:     #1c1205;
+    --text-secondary:   #5a4a2a;
+    --text-muted:       #9a8a6a;
+    --text-ayah:        #2d1f0a;
+    --scrollbar-bg:     #f7f2e8;
+    --skeleton-from:    rgba(200,180,120,0.22);
+    --hero-glow:        rgba(180,130,20,0.10);
+    --card-gradient:    linear-gradient(135deg,rgba(255,253,245,0.96) 0%,rgba(250,245,230,0.96) 100%);
+  }
+
   :root {
-    --gold: #D4AF37;
-    --gold-light: #f0d060;
-    --dark: #0a1628;
-    --darker: #060e1a;
-    --surface: #0f2035;
-    --card: #132840;
-    --border: #1e3a5a;
-    --green: #1a4731;
+    --gold:        #D4AF37;
+    --gold-light:  #f0d060;
+    --gold-dark:   #b8972e;
+    --green:       #1a4731;
     --green-light: #2d7a56;
   }
 
   * {
     scrollbar-width: thin;
-    scrollbar-color: var(--gold) var(--darker);
+    scrollbar-color: var(--gold) var(--scrollbar-bg);
   }
-  *::-webkit-scrollbar { width: 6px; }
-  *::-webkit-scrollbar-track { background: var(--darker); }
+  *::-webkit-scrollbar       { width: 5px; }
+  *::-webkit-scrollbar-track { background: var(--scrollbar-bg); }
   *::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 3px; }
 
   html { direction: rtl; }
+
   body {
-    @apply bg-islamic-darker text-white font-cairo;
-    background-image: 
-      radial-gradient(ellipse at top, rgba(26,71,49,0.15) 0%, transparent 60%),
-      radial-gradient(ellipse at bottom, rgba(212,175,55,0.05) 0%, transparent 60%);
+    background-color: var(--bg-base);
+    color: var(--text-primary);
+    font-family: 'Cairo', sans-serif;
     min-height: 100vh;
+    transition: background-color 0.4s ease, color 0.3s ease;
   }
+
+  html.dark body {
+    background-image:
+      radial-gradient(ellipse at top,    rgba(26,71,49,0.18)   0%, transparent 55%),
+      radial-gradient(ellipse at bottom, rgba(212,175,55,0.06) 0%, transparent 55%);
+  }
+  html:not(.dark) body {
+    background-image:
+      radial-gradient(ellipse at top,    rgba(212,175,55,0.08) 0%, transparent 55%),
+      radial-gradient(ellipse at bottom, rgba(180,130,20,0.05) 0%, transparent 55%);
+  }
+
+  /* Smooth theme transitions - but skip transform/opacity for animation perf */
+  *, *::before, *::after {
+    transition: background-color 0.35s ease, border-color 0.35s ease,
+                color 0.25s ease, box-shadow 0.35s ease;
+  }
+  .no-transition, .no-transition * { transition: none !important; }
 }
 
+/* ============================================================
+   COMPONENTS
+   ============================================================ */
 @layer components {
-  .glass-card {
-    @apply bg-islamic-card border border-islamic-border backdrop-blur-sm rounded-2xl;
-    background: linear-gradient(135deg, rgba(19,40,64,0.9) 0%, rgba(15,32,53,0.9) 100%);
-  }
 
-  .gold-gradient {
-    background: linear-gradient(135deg, #D4AF37 0%, #f0d060 50%, #D4AF37 100%);
+  .glass-card {
+    border-radius: 1rem;
+    border: 1px solid var(--border-gold);
+    background: var(--card-gradient);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+  html:not(.dark) .glass-card {
+    box-shadow: 0 2px 16px rgba(180,130,20,0.07);
   }
 
   .gold-text {
-    background: linear-gradient(135deg, #D4AF37, #f0d060, #D4AF37);
+    background: linear-gradient(135deg, var(--gold), var(--gold-light), var(--gold));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
 
-  .islamic-pattern {
-    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Cg fill='%23D4AF37' fill-opacity='0.06'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-  }
-
-  .shimmer {
-    background: linear-gradient(90deg, rgba(255,255,255,0.03) 25%, rgba(212,175,55,0.08) 50%, rgba(255,255,255,0.03) 75%);
-    background-size: 200% 100%;
-    animation: shimmer 2s linear infinite;
-  }
-
   .btn-gold {
-    @apply px-6 py-3 rounded-xl font-cairo font-semibold text-islamic-darker transition-all duration-300;
-    background: linear-gradient(135deg, #D4AF37, #f0d060);
-    box-shadow: 0 4px 20px rgba(212,175,55,0.3);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.75rem;
+    font-family: 'Cairo', sans-serif;
+    font-weight: 600;
+    cursor: pointer;
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    color: #060e1a;
+    box-shadow: 0 4px 20px rgba(212,175,55,0.30);
+    transition: transform 0.25s, box-shadow 0.25s !important;
   }
-  .btn-gold:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 30px rgba(212,175,55,0.5);
-  }
+  .btn-gold:hover  { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(212,175,55,0.50); }
+  .btn-gold:active { transform: translateY(0); }
 
   .btn-outline {
-    @apply px-6 py-3 rounded-xl font-cairo font-semibold border transition-all duration-300;
-    border-color: var(--gold);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.75rem;
+    font-family: 'Cairo', sans-serif;
+    font-weight: 600;
+    border: 1px solid var(--gold);
     color: var(--gold);
+    cursor: pointer;
+    transition: background 0.25s, box-shadow 0.25s !important;
   }
-  .btn-outline:hover {
-    background: rgba(212,175,55,0.1);
-    box-shadow: 0 0 20px rgba(212,175,55,0.2);
-  }
+  .btn-outline:hover { background: rgba(212,175,55,0.10); box-shadow: 0 0 18px rgba(212,175,55,0.18); }
 
   .nav-link {
-    @apply flex items-center gap-2 px-4 py-2 rounded-xl transition-all duration-300 text-gray-400 hover:text-gold-500;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: 0.75rem;
+    color: var(--text-secondary);
+    transition: color 0.25s, background 0.25s !important;
   }
+  .nav-link:hover  { color: var(--gold); }
   .nav-link.active {
-    @apply text-gold-500;
-    background: rgba(212,175,55,0.1);
-    box-shadow: inset 0 0 20px rgba(212,175,55,0.05);
+    color: var(--gold);
+    background: rgba(212,175,55,0.10);
   }
 
   .ayah-text {
     font-family: 'Amiri', serif;
-    font-size: 1.6rem;
-    line-height: 2.4;
-    color: #e8d5a3;
-    text-shadow: 0 0 30px rgba(212,175,55,0.1);
+    font-size: 1.55rem;
+    line-height: 2.6;
+    color: var(--text-ayah);
   }
 
   .surah-card {
-    @apply glass-card p-5 cursor-pointer transition-all duration-300 hover:scale-[1.02];
-    border: 1px solid rgba(212,175,55,0.15);
+    padding: 1.25rem;
+    cursor: pointer;
   }
   .surah-card:hover {
-    border-color: rgba(212,175,55,0.4);
-    box-shadow: 0 0 30px rgba(212,175,55,0.1);
-  }
-
-  .skeleton {
-    @apply rounded-xl shimmer;
-    background-color: rgba(30, 58, 90, 0.5);
-  }
-
-  .focus-mode {
-    background: radial-gradient(ellipse at center, #0d1f35 0%, #060e1a 100%);
-  }
-
-  .particle {
-    position: absolute;
-    border-radius: 50%;
-    pointer-events: none;
-    background: radial-gradient(circle, rgba(212,175,55,0.6) 0%, transparent 70%);
+    border-color: rgba(212,175,55,0.45) !important;
+    transform: translateX(4px);
+    box-shadow: 0 0 28px rgba(212,175,55,0.10);
   }
 
   .hadith-card {
-    @apply glass-card p-6 transition-all duration-300;
-    border-left: 3px solid var(--gold);
+    padding: 1.5rem;
+    border-right: 3px solid var(--gold);
   }
 
-  .zikr-card {
-    @apply glass-card p-6 text-center cursor-pointer transition-all duration-300;
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.125rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    background: rgba(212,175,55,0.12);
+    border: 1px solid rgba(212,175,55,0.28);
+    color: var(--gold);
   }
-  .zikr-card:hover {
-    border-color: rgba(212,175,55,0.5);
-    box-shadow: 0 0 40px rgba(212,175,55,0.15);
+
+  .search-input {
+    width: 100%;
+    border-radius: 0.75rem;
+    padding: 0.75rem 1.25rem;
+    outline: none;
+    font-family: 'Cairo', sans-serif;
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    color: var(--text-primary);
+  }
+  .search-input::placeholder { color: var(--text-muted); }
+  .search-input:focus {
+    border-color: var(--gold);
+    box-shadow: 0 0 18px rgba(212,175,55,0.14);
+  }
+
+  .skeleton {
+    border-radius: 0.75rem;
+    background: var(--skeleton-from);
+    background-image: linear-gradient(90deg, transparent 25%, rgba(212,175,55,0.07) 50%, transparent 75%);
+    background-size: 200% 100%;
+    animation: shimmer 2s linear infinite;
   }
 
   .counter-circle {
@@ -145,73 +226,72 @@
     justify-content: center;
     flex-direction: column;
     cursor: pointer;
-    transition: all 0.2s;
-    background: radial-gradient(circle, rgba(212,175,55,0.1) 0%, transparent 70%);
-    box-shadow: 0 0 30px rgba(212,175,55,0.2), inset 0 0 30px rgba(212,175,55,0.05);
+    background: radial-gradient(circle, rgba(212,175,55,0.09) 0%, transparent 70%);
+    box-shadow: 0 0 28px rgba(212,175,55,0.18), inset 0 0 28px rgba(212,175,55,0.05);
+    transition: transform 0.15s, box-shadow 0.2s !important;
   }
   .counter-circle:active {
-    transform: scale(0.95);
-    box-shadow: 0 0 50px rgba(212,175,55,0.4), inset 0 0 50px rgba(212,175,55,0.1);
+    transform: scale(0.94) !important;
+    box-shadow: 0 0 50px rgba(212,175,55,0.40), inset 0 0 40px rgba(212,175,55,0.10) !important;
   }
 
-  .search-input {
-    @apply w-full bg-islamic-surface border border-islamic-border rounded-xl px-5 py-3 text-white placeholder-gray-500 outline-none transition-all duration-300 font-cairo;
-  }
-  .search-input:focus {
-    border-color: var(--gold);
-    box-shadow: 0 0 20px rgba(212,175,55,0.15);
-  }
-
-  .page-header {
-    @apply text-center py-12 px-4 relative;
+  .particle {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    background: radial-gradient(circle, rgba(212,175,55,0.55) 0%, transparent 70%);
   }
 
-  .section-title {
-    @apply text-3xl font-cairo font-bold gold-text mb-2;
+  /* Theme Toggle Pill */
+  .theme-toggle {
+    position: relative;
+    width: 3.5rem;
+    height: 1.75rem;
+    border-radius: 9999px;
+    cursor: pointer;
+    flex-shrink: 0;
+    border: 1px solid var(--border-gold);
+    transition: background 0.4s ease !important;
   }
+  html.dark .theme-toggle        { background: rgba(15,32,53,0.9); }
+  html:not(.dark) .theme-toggle  { background: rgba(255,248,210,0.9); }
 
-  .badge {
-    @apply inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold;
-    background: rgba(212,175,55,0.15);
-    border: 1px solid rgba(212,175,55,0.3);
-    color: var(--gold);
+  .theme-toggle-knob {
+    position: absolute;
+    top: 0.125rem;
+    width: 1.375rem;
+    height: 1.375rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    box-shadow: 0 2px 8px rgba(212,175,55,0.5);
+    transition: right 0.35s cubic-bezier(0.34,1.56,0.64,1) !important;
   }
+  html.dark .theme-toggle-knob        { right: 0.125rem; }
+  html:not(.dark) .theme-toggle-knob  { right: calc(100% - 1.5rem); }
+
+  .reading-mode { max-width: 860px; margin: 0 auto; }
 }
 
+/* ============================================================
+   KEYFRAMES
+   ============================================================ */
 @keyframes shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
 }
-
 @keyframes float {
-  0%, 100% { transform: translateY(0px) rotate(0deg); }
-  33% { transform: translateY(-15px) rotate(5deg); }
-  66% { transform: translateY(-8px) rotate(-3deg); }
+  0%,100% { transform: translateY(0)    rotate(0); }
+  33%      { transform: translateY(-14px) rotate(4deg); }
+  66%      { transform: translateY(-7px)  rotate(-3deg); }
 }
-
 @keyframes pulseRing {
-  0% { transform: scale(1); opacity: 1; }
-  100% { transform: scale(1.5); opacity: 0; }
+  0%   { transform: scale(1);   opacity: 1; }
+  100% { transform: scale(1.6); opacity: 0; }
 }
-
-.pulse-ring::before {
-  content: '';
-  position: absolute;
-  inset: -4px;
-  border-radius: 50%;
-  border: 2px solid var(--gold);
-  animation: pulseRing 2s ease-out infinite;
-}
-
-.reading-mode {
-  max-width: 860px;
-  margin: 0 auto;
-}
-
-.light-mode {
-  --dark: #f8f4e8;
-  --darker: #f0e8d0;
-  --surface: #e8dfc4;
-  --card: #fffdf5;
-  --border: #d4c080;
+@keyframes rotateStar {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
 }
